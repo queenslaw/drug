@@ -1,0 +1,48 @@
+Sub match()
+'
+' match 매크로
+'
+
+'
+    Columns("A:A").ColumnWidth = 22.1
+    Cells.Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Cells.Select
+    Cells.EntireColumn.AutoFit
+    Range("D2").Select
+    Columns("C:C").ColumnWidth = 45.9
+    Columns("D:D").ColumnWidth = 71.1
+    Cells.Select
+    Cells.EntireRow.AutoFit
+    Range("A1:D1").Select
+    Selection.Font.Bold = True
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorLight1
+        .TintAndShade = 0.499984740745262
+        .PatternTintAndShade = 0
+    End With
+    Range("E3").Select
+    
+End Sub

@@ -1,0 +1,16 @@
+https://nedrug.mfds.go.kr/PPCAA03
+
+<flow>
+[init]
+- 메일수신 키워드 추출
+
+
+[process]
+- 조회
+- dt추출
+- 가공하여 키워드 추출
+- 가공하여 당월 추출
+
+[end]
+- html
+- 메일발송

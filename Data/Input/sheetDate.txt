@@ -1,0 +1,21 @@
+Sub sheetDate()
+    Dim oldName As String
+    Dim newName As String
+    Dim targetSheet As Worksheet
+
+    ' 변경 대상 시트명
+    oldName = "yy년 MM월"
+    newName = Format(Now, "yy년 MM월")
+
+    ' 시트가 이미 변경되었는지 확인
+    On Error Resume Next
+    Set targetSheet = Sheets(newName)
+    On Error GoTo 0
+
+    ' 시트가 존재하고 아직 변경되지 않았다면 이름 변경
+    If Not targetSheet Is Nothing Then
+        If targetSheet.Name <> newName Then
+            targetSheet.Name = newName
+        End If
+    End If
+End Sub

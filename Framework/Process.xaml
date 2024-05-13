@@ -1,0 +1,194 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Process" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:uix="http://schemas.uipath.com/workflow/activities/uix" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property sap2010:Annotation.AnnotationText="Transaction item to be processed." Name="in_TransactionItem" Type="InArgument(sd:DataRow)" />
+    <x:Property sap2010:Annotation.AnnotationText="Dictionary structure to store configuration data of the process (settings, constants and assets)." Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
+    <x:Property Name="io_ResultFolderPath" Type="InOutArgument(x:String)" />
+    <x:Property Name="io_ResultFileName" Type="InOutArgument(x:String)" />
+    <x:Property Name="io_InputFullPath" Type="InOutArgument(x:String)" />
+    <x:Property Name="io_ResultFullPath" Type="InOutArgument(x:String)" />
+    <x:Property Name="io_dtBuild" Type="InOutArgument(sd:DataTable)" />
+    <x:Property Name="out_dtIssue" Type="OutArgument(sd:DataTable)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>826.4,1805.6</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ProcessTransaction_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="50">
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Runtime.InteropServices</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>System.Windows.Forms</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>UiPath.UIAutomationNext.Enums</x:String>
+      <x:String>System.Linq.Expressions</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>UiPath.UIAutomationCore.Contracts</x:String>
+      <x:String>UiPath.UIAutomationNext.Contracts</x:String>
+      <x:String>UiPath.UIAutomationNext.Models.CV</x:String>
+      <x:String>UiPath.UIAutomationNext.Activities.Models</x:String>
+      <x:String>UiPath.UIAutomationNext.Activities</x:String>
+      <x:String>UiPath.Shared.Activities</x:String>
+      <x:String>UiPath.Platform.ObjectLibrary</x:String>
+      <x:String>System.Numerics</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="80">
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Configuration.ConfigurationManager</AssemblyReference>
+      <AssemblyReference>System.Console</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Private.Uri</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.Security.Permissions</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.Windows.Forms</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>NPOI</AssemblyReference>
+      <AssemblyReference>System.Memory.Data</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>System.Data.SqlClient</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.EventBasedAsync</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Primitives</AssemblyReference>
+      <AssemblyReference>System.Private.Xml</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationNext</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationNext.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Testing.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+      <AssemblyReference>System.Reflection.DispatchProxy</AssemblyReference>
+      <AssemblyReference>System.Reflection.TypeExtensions</AssemblyReference>
+      <AssemblyReference>System.Reflection.Metadata</AssemblyReference>
+      <AssemblyReference>System.Private.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Formatters</AssemblyReference>
+      <AssemblyReference>System.Private.DataContractSerialization</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
+      <AssemblyReference>System.Linq.Async</AssemblyReference>
+      <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+      <AssemblyReference>System.Linq.Expressions</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.ViewModels</AssemblyReference>
+      <AssemblyReference>System.Linq.Async.Queryable</AssemblyReference>
+      <AssemblyReference>System.Linq.Parallel</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>System.Linq.Queryable</AssemblyReference>
+      <AssemblyReference>System.Runtime.Numerics</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Invoke major steps of the business process, which are usually implemented by multiple subworkflows.&#xA;&#xA;If a BusinessRuleException is thrown, the transaction is skipped. &#xA;If another kind of exception occurs, the current transaction can be retried. " DisplayName="Process" sap:VirtualizedContainerService.HintSize="512,1740.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="get처분사항" />
+      <Variable x:TypeArguments="x:String" Name="get위반내역" />
+      <Variable x:TypeArguments="x:String" Name="get처분일자" />
+      <Variable x:TypeArguments="x:String" Name="get업체명" />
+      <Variable x:TypeArguments="x:Int32" Name="out_int_PageNo" />
+      <Variable x:TypeArguments="x:Int32" Name="out_int_NowPageNo" />
+      <Variable x:TypeArguments="x:Int32" Name="out_int_TotalNo" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:LogMessage DisplayName="Log Message Process Start" sap:VirtualizedContainerService.HintSize="449.6,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Started Process&quot;]" />
+    <uix:NApplicationCard AttachMode="ByInstance" DisplayName="Use Browser Chrome: 의약품안전나라 &gt; 고시/공고/알림 &gt; 안전성정보 &gt; 행정처분정보" sap:VirtualizedContainerService.HintSize="449.6,1306.4" sap2010:WorkflowViewState.IdRef="NApplicationCard_4" InteractionMode="DebuggerApi" ScopeGuid="bb01bf4a-71c3-41dc-b539-2488508de53a" Version="V2" WindowResize="Maximize">
+      <uix:NApplicationCard.Body>
+        <ActivityAction x:TypeArguments="x:Object">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="x:Object" Name="WSSessionData" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,1057.6" sap2010:WorkflowViewState.IdRef="Sequence_5">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <uix:NGetText DisplayName="Get Text '성이바이오제약주식회사'" sap:VirtualizedContainerService.HintSize="353.6,189.6" sap2010:WorkflowViewState.IdRef="NGetText_5" ScopeIdentifier="bb01bf4a-71c3-41dc-b539-2488508de53a" TextString="[get업체명]" Version="V3">
+              <uix:NGetText.Target>
+                <uix:TargetAnchorable BrowserURL="https://nedrug.mfds.go.kr/pbp/CCBAO01/getItem?totalPages=44&amp;limit=10&amp;searchYn=true&amp;dispsDateEnd=2024-04-30&amp;page=1&amp;searchTypeCode=A&amp;dispsDateStart=2024-03-01&amp;dispsApplySeq=2024003463" CvTextArea="725, 382, 165, 18" CvType="AnyWordGroup" DesignTimeRectangle="721, 366, 406, 49" DesignTimeScaleFactor="1.25" ElementType="Text" FullSelectorArgument="&lt;webctrl tag='TABLE' /&gt;&lt;webctrl tableRow='1' tag='TD' /&gt;" FuzzySelectorArgument="&lt;webctrl tag='TABLE' /&gt;&lt;webctrl type='' tag='TD' class='' /&gt;" Guid="4b312c97-4d05-4965-8c7a-19e9f4c1e932" InformativeScreenshot="ad1893b66dc7647944fbd922f2b4f498.png" ScopeSelectorArgument="&lt;html app='chrome.exe' title='의약품안전나라 &amp;gt; 고시/공고/알림 &amp;gt; 안전성정보 &amp;gt; 행정처분정보' /&gt;" SearchSteps="Selector" Version="V3" Visibility="Interactive" />
+              </uix:NGetText.Target>
+            </uix:NGetText>
+            <uix:NGetText DisplayName="Get Text '2024-04-24'" sap:VirtualizedContainerService.HintSize="353.6,189.6" sap2010:WorkflowViewState.IdRef="NGetText_6" ScopeIdentifier="bb01bf4a-71c3-41dc-b539-2488508de53a" TextString="[get처분일자]" Version="V3">
+              <uix:NGetText.Target>
+                <uix:TargetAnchorable BrowserURL="https://nedrug.mfds.go.kr/pbp/CCBAO01/getItem?totalPages=44&amp;limit=10&amp;searchYn=true&amp;dispsDateEnd=2024-04-30&amp;page=1&amp;searchTypeCode=A&amp;dispsDateStart=2024-03-01&amp;dispsApplySeq=2024003463" CvTextArea="724, 530, 87, 16" CvType="AnyWordGroup" DesignTimeRectangle="721, 513, 406, 48" DesignTimeScaleFactor="1.25" ElementType="Text" FullSelectorArgument="&lt;webctrl tag='TABLE' /&gt;&lt;webctrl tableRow='8' tag='TD' /&gt;" FuzzySelectorArgument="&lt;webctrl tag='TABLE' /&gt;&lt;webctrl type='' tag='TD' class='' /&gt;" Guid="9d5d99d5-a3d7-4806-bd9a-3e7c5d0009f4" InformativeScreenshot="5b6d6d78b0e06ae2a13117a5cf06c12d.png" ScopeSelectorArgument="&lt;html app='chrome.exe' title='의약품안전나라 &amp;gt; 고시/공고/알림 &amp;gt; 안전성정보 &amp;gt; 행정처분정보' /&gt;" SearchSteps="Selector" Version="V3" Visibility="Interactive" />
+              </uix:NGetText.Target>
+            </uix:NGetText>
+            <uix:NGetText DisplayName="Get Text '기준서 미준수 및 시험성적서 거짓 작성'" sap:VirtualizedContainerService.HintSize="353.6,189.6" sap2010:WorkflowViewState.IdRef="NGetText_7" ScopeIdentifier="bb01bf4a-71c3-41dc-b539-2488508de53a" TextString="[get위반내역]" Version="V3">
+              <uix:NGetText.Target>
+                <uix:TargetAnchorable BrowserURL="https://nedrug.mfds.go.kr/pbp/CCBAO01/getItem?totalPages=44&amp;limit=10&amp;searchYn=true&amp;dispsDateEnd=2024-04-30&amp;page=1&amp;searchTypeCode=A&amp;dispsDateStart=2024-03-01&amp;dispsApplySeq=2024003463" CvTextArea="725, 662, 259, 18" CvType="AnyWordGroup" DesignTimeRectangle="721, 647, 987, 49" DesignTimeScaleFactor="1.25" ElementType="Text" FullSelectorArgument="&lt;webctrl aaname='                         위반내역 상세 테이블 :: 위반내용, 처분사항, 근거법령 정보 제공  *' tag='TABLE' /&gt;&lt;webctrl tableRow='1' tag='TD' /&gt;" FuzzySelectorArgument="&lt;webctrl aaname='                         위반내역 상세 테이블 :: 위반내용, 처분사항, 근거법령 정보 제공  *' tag='TABLE' /&gt;&lt;webctrl type='' tag='TD' class='' /&gt;" Guid="02d9ecc6-8a69-44cf-9972-64caa36821f9" InformativeScreenshot="db80450d29362b376d3c30aa9cdf1ecc.png" ScopeSelectorArgument="&lt;html app='chrome.exe' title='의약품안전나라 &amp;gt; 고시/공고/알림 &amp;gt; 안전성정보 &amp;gt; 행정처분정보' /&gt;" SearchSteps="Selector" Version="V3" Visibility="Interactive" />
+              </uix:NGetText.Target>
+            </uix:NGetText>
+            <uix:NGetText DisplayName="Get Text '○ 해당'" sap:VirtualizedContainerService.HintSize="353.6,189.6" sap2010:WorkflowViewState.IdRef="NGetText_8" ScopeIdentifier="bb01bf4a-71c3-41dc-b539-2488508de53a" TextString="[get처분사항]" Version="V3">
+              <uix:NGetText.Target>
+                <uix:TargetAnchorable BrowserURL="https://nedrug.mfds.go.kr/pbp/CCBAO01/getItem?totalPages=44&amp;limit=10&amp;searchYn=true&amp;dispsDateEnd=2024-04-30&amp;page=1&amp;searchTypeCode=A&amp;dispsDateStart=2024-03-01&amp;dispsApplySeq=2024003463" DesignTimeRectangle="721, 696, 987, 73" DesignTimeScaleFactor="1.25" ElementType="Text" FullSelectorArgument="&lt;webctrl aaname='                         위반내역 상세 테이블 :: 위반내용, 처분사항, 근거법령 정보 제공  *' tag='TABLE' /&gt;&lt;webctrl tableRow='3' tag='TD' /&gt;" FuzzySelectorArgument="&lt;webctrl aaname='                         위반내역 상세 테이블 :: 위반내용, 처분사항, 근거법령 정보 제공  *' tag='TABLE' /&gt;&lt;webctrl type='' tag='TD' class='' /&gt;" Guid="dc590f03-cc09-4edb-908e-b49b68742a2b" InformativeScreenshot="038a7177c15a475b4a79aba45ab2a88c.png" ScopeSelectorArgument="&lt;html app='chrome.exe' title='의약품안전나라 &amp;gt; 고시/공고/알림 &amp;gt; 안전성정보 &amp;gt; 행정처분정보' /&gt;" SearchSteps="Selector" Version="V3" Visibility="Interactive" />
+              </uix:NGetText.Target>
+            </uix:NGetText>
+            <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[{get업체명, get처분일자, get위반내역, get처분사항}]" DataTable="[io_dtBuild]" DisplayName="Add Data Row" sap:VirtualizedContainerService.HintSize="353.6,212.8" sap2010:WorkflowViewState.IdRef="AddDataRow_3" />
+          </Sequence>
+        </ActivityAction>
+      </uix:NApplicationCard.Body>
+      <uix:NApplicationCard.TargetApp>
+        <uix:TargetApp Area="-9, -9, 1938, 1038" BrowserType="Chrome" IconBase64="iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAJtSURBVDhPpZNNTBNBFMdHMZJqPNgD3S1QKLa1YkRpSndnt1BRa5HGqIlVsfIpbTV6NDExetKYmGhiajQYD34So54a4GDiwYsgJ0w0hJMYQyRGtBDDh4A+/7MRbIt68fDL7s6895s383YY4+2Z5IEw0+J3wLDF15J2exuHXd6mbpN69DTm3GZfa3ZOxkcp47EuJNKuzQep0xGi/pJaGioK0GBxgJ7ad9DZDXveF/haWhCzRGADA3k8Rhfdu2lC1kbmJf5wStbOf5W1y6Drm8TTs5JKL0q2kdcTPcP0BGNazBCsBD1Mj9Op8r30Q1Jvpq26e8yqsxmZs++SajAl8wqMPcYYvbEF5qKbInX7KyKGIAITObxNNFQcuDEpawwCNo+kbnuQdbjCBs9LtzOyKCswd3ta4tRXUtt3xRVeIwRPxOrBLYemUWolYJ8heLQuxPI5SvQfMzArbQyrspHC6lXjVu3VaKGf3hbVeIRgRByc4jn8IVUWdHY465nT24T94aDEHnm7BI7gvZFVHy86uXEfI0lp+GLVxVkdEAEzgExq26Stqtm7Giv9ShSsB6/FvIEWG7QqreX9tlozDngOlRrtSGcEPANVeDcBH+hdnFvAn7iVKtuZPyvxUQhOCMHLnKBxMAAmMsZ+o8d7e+xBO9o6BkFICM4tCfoX/kQnKvCggncQWITADT5mBf0NPUFbKxtCSEyOy9olPJcJgSAKZhcD/wT+FXTm2j1HnTIn8RR+qrUQZN2FZvDJCM5hOW+fKlRak9ed9SpZ1KtIdorkXIFAtO0CuAsegPtYOYkLVIO+i9ZFkFSwkGwIiOg/IPYTTqx3oTj9v3sAAAAASUVORK5CYII=" InformativeScreenshot="06d4a6c2b0bea29e644c6d6c4e9ac7f3.jpg" Selector="&lt;html app='chrome.exe' title='의약품안전나라 &amp;gt; 고시/공고/알림 &amp;gt; 안전성정보 &amp;gt; 행정처분정보' /&gt;" Title="의약품안전나라 &gt; 고시/공고/알림 &gt; 안전성정보 &gt; 행정처분정보" Url="[in_TransactionItem(1).ToString]" />
+      </uix:NApplicationCard.TargetApp>
+    </uix:NApplicationCard>
+    <ui:Comment DisplayName="Comment (placeholder)" sap:VirtualizedContainerService.HintSize="449.6,79.2" sap2010:WorkflowViewState.IdRef="Comment_1" Text="//  Invoke steps of the process" />
+  </Sequence>
+</Activity>

@@ -1,0 +1,142 @@
+<의약품 안전나라>
+• 수신한 메일에서 처리 항목 가져오기
+• 의약품 안전나라 – 고시/공고/알림 – 행정처분정보 접속
+• 품목구분 및 조회기간 설정 (의약품 등, 메일에 주어진 기간) 
+• 템플릿 파일의 양식에 맞게 추출한 ‘전체DT’를 당월시트에 입력
+• ‘전체DT’ 중 키워드가 포함된 내용만 추출하여 이슈사항시트에 입력
+• 이슈사항시트의 내용 중 처분일자가 당월인 것만 필터링하여 당월이슈시트에 입력
+• 결과파일을 첨부하여 양식대로 메일 발송
+
+[init]
+0. 초기작업
+- assign : 템프파일 및 생성할 파일 경로 변수 생성
+- Path Exists : 결과폴더 위치에 결과파일 유무 확인하여 clear처리
+- If : 기존파일이 있다면 삭제 
+ ㄴ then : delete file
+- Copy File : 템프 양식 보존, end 에서 파일 작성 시 활용
+- Build data table : 생성할 데이터 양식의 dt 임의 생성, process에서 활용
+
+1. 자료 수급
+- get credential : private 계정 접속
+- get imap mail message : 받은 이메일에서 조건 필터하여 해당 자료 추출
+- For each : 추출한 자료의 본문 진입 
+ ㄴ If : 메일 제목에서 타이틀 포함 조건으로 필터링
+      ㄴ then : assign : 메일본문 변수 생성하여 str으로 출력
+           ㄴ break : loop 해제
+   
+2. 메일본문에서 정보 추출
+- Text to Left/Right : 본문 변수를 가공하여 텍스트 추출
+  1) 검색어 list
+  2) 검색일자 str
+
+==> 추가
+3) 수급 데이터가 없을 경우 예외 처리
+* main에 정상 케이스를 기준으로 하는 out_strmailBodyCheck 변수 생성 = default는 ""으로 고정
+- IF 조건 : 추출한 str메일변수의 데이터 유무
+ ㄴ then > assign : out_strmailBodyCheck = "str mailBody is not toting"
+ ㄴ else > Throw : new exception ("[메일 확인 불가]")
+== 메일 추출이 불가하다면 IF>else를 통하여 [end state]로 진입
+
+
+
+3. TransacionItem 추출 : 조건에 해당하는 게시글의 각 url
+- use application : 사이트 접근
+ ㄴ click : 카테고리 선택하여 리스트 진입
+   > 고시공고알림-행정처분정보-구분(select item)
+ ㄴ type into :  검색최소일자-검색최대일자
+ ㄴ Table Extract dt : 업체명/URL => dt_TransactionData
+- build data table : 확인 목적의 dtresultCheck 생성 > "업체명/Url/결과/errorNote"
+
+[process]
+* TransactionItem : dt_TransactionData>DataRow>2번째 열 URL
+* init에서 생성한 dtbuild 활용, 동일한 항목의 정보 추출
+
+- use application : TransactionItem(1) 다이렉트 접근 
+- get text : 업체명/처분일자/위반내역/처분사항 변수 생성
+- add data row : transacionITem 순서대로 dtbuild에 gettext 변수 배열 입력
+3-1. 현재 transactionItem의 process 결과 확인
+* 성공 : Process transacion의 Try block
+- add data row : 진행된 transactionItem를 init에서 결과확인 목적으로 생성한 dtresultCheck에 배열로 적재
+- assign : 성공 횟수 count
+- assign : dtresultCheckdml "결과" 열에 "성공" 입력
+- Append item to List : 리스트에 적재할 아이템을 리스트변수에 입력
+ 
+* 실패 : Process transacion의 catches block
+- add data row : 진행된 transactionItem를 init에서 결과확인 목적으로 생성한 dtresultCheck에 배열로 적재
+- assign : 실패 횟수 count
+- assign : dtresultCheckdml "결과" 열에 "실패" 입력
+- assign : dtresultCheckdml "errorNote" 열에 BusinessException.Message 입력
+- Append item to List : 리스트에 적재할 아이템을 리스트변수에 입력
+ 
+
+
+
+[end]
+
+==> 추가
+* 수신한 메일에서 데이터를 추출하는 작업이 실패했을 예외 케이스를 고려하여 end 첫 진입 시 IF 분기하여 프로세스 진행
+**[init]의 메일수신 sequence에서 생성한 인수 strmailBodyCheck가 main에서 default =0 인 상태로 구분자 역할
+# IF 조건 : strmailBodyCheck = "mail is not nothing"
+  ㄴ then > 정상 케이스에 따른 step 진행
+  ㄴ else > 예외 케이스에 해당되는 메일 발송하여 작업 실패 알림
+
+
+1. 엑셀 시트 작성 
+- excel application scope : init에서 복사한 excel 진입
+ㄴ invoke VBA : 날짜 시트명 변경 sheetDate.txt
+  > "yy년MM월"인 시트명을 현재일자 기준으로 변경하는 코드
+ㄴ get workbook sheets : 시트변수 생성
+ 1) 1번째 sheet 작성
+   > wrhite rage : sheet(0)에 dtBuild 입력
+ 2) 2번째 sheet 작성
+   > filter data table : 처분일자 contaions "04" 현재월, dtThissMM 변수 출력
+   > wrhite rage : sheet(1)에 dtThissMM 입력
+ 3) 3번째 sheet 작성
+   > Build Data Table : 해당 시트를 적재하기 위한 dtIssue 생성
+   > For each : init에서 추출한 메일본문의 검색keyword
+    ㄴ for each row in data table : 원 가공데이터인 dtbuild를 loop
+      ㄴ If : dtbuild의 위반내역 컬럼이 listkeyword 포함한다면
+       (If dtBuild.AsEnumerable().Any(Function(row) row("위반내역").ToString.Contains(currentText.ToString))
+        ㄴ then : add data row : 생성한 dtIssue에 현재 행 적재
+   > wrhite rage : sheet(2)에 dtIssue 입력
+
+2. html 생성 : 메일 발송 시 "이슈사항" sheet 콘텐츠를 표생성하여 삽입
+- excel application scope : 작업완료한 excel 파일
+ ㄴ read range : "이슈사항"시트 dtIssiue 수급
+- for each row in data table : dtIssiue의 행을 loop하여 table 코드에 한줄씩 적재
+  ㄴ append line 
+    > Text :  
+	 "<tr>
+   		<td>"+currentrow("업체명").Tostring+"</td>
+  		<td>"+currentrow("처분일자").Tostring+"</td>
+   		<td>"+currentrow("위반내역").Tostring+"</td>
+   		<td>"+currentrow("처분사항").Tostring+"</td>
+ 	  </tr>"
+
+     > write to fileName  : 비어있는 메모장 newtable.txt 
+   ㄴ read text file : newtable메모장에 현재 행 table코드 적용하여 입력
+- assign : strHTML 생성 = dtIssue를 html 형식으로 생성하는 메소드(.ToHtmlTable)
+- assign : strHTML의 H1에 클래스 적용
+(strHTML.Replace("<table><tr>",
+ "<table class='table' style='width: 80%; border-collapse: collapse' border='1'><tr style='background-color:pink'>").Replace("<td>", "<td style='text-align: center;'>")
+- assign : 테이블로 생성된 strHTML 변수에서 "<html><body>" 코드라인을 제거해 주어 본문 입력 시 충돌 방지 (strHTML.Replace("<html><body>", "").Replace("</html></body>", "")
+- get credential : 메일 계정 진입
+- send smtp mail message
+ ㄴ attach files : 최종생성파일 첨부
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
